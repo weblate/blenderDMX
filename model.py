@@ -18,8 +18,9 @@ class DMX_Model():
     #   This collection is then deep-copied by the Fixture class
     #   to create a fixture collection.
     @staticmethod
-    def getFixtureModelCollection(profile, dmx_mode):
+    def getFixtureModelCollection(profile, dmx_mode, position = None):
 
+        print("model", position)
         # Make sure the profile was passed as an argument, otherwise return None
         if (profile == None):
             return None
@@ -32,4 +33,4 @@ class DMX_Model():
             return bpy.data.collections[name]
 
         # Otherwise, build it from profile
-        return DMX_GDTF.buildCollection(profile, dmx_mode)
+        return DMX_GDTF.buildCollection(profile, dmx_mode, position)

@@ -169,7 +169,9 @@ class DMX_GDTF():
         return obj
 
     @staticmethod
-    def buildCollection(profile, mode):
+    def buildCollection(profile, mode, mvr_position = None):
+        print("build coolection", mvr_position)
+
 
         # Create model collection
         collection = bpy.data.collections.new(DMX_GDTF.getName(profile, mode))
@@ -232,9 +234,13 @@ class DMX_GDTF():
 
         def add_child_position(geometry):
             """Add a child, create a light source and emitter material for beams"""
-
-            position = [geometry.position.matrix[c][3] for c in range(3)]
             obj_child = objs[geometry.name]
+            position = [geometry.position.matrix[c][3] for c in range(3)]
+            if (geometry.name == root_geometry.name) and (mvr_position is not None):
+                root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
+                obj_child.location[0] += root_position[0]
+                obj_child.location[1] += root_position[1]
+                obj_child.location[2] += root_position[2]
             obj_child.location[0] += position[0]
             obj_child.location[1] += position[1]
             obj_child.location[2] += position[2]
@@ -283,7 +289,6 @@ class DMX_GDTF():
         def update_geometry(geometry):
             """Recursively update objects position, rotation and scale
                and define parent/child constraints"""
-
             add_child_position(geometry)
 
             if hasattr(geometry, "geometries"):
@@ -301,7 +306,11 @@ class DMX_GDTF():
         collection.objects.link(target)
         target.empty_display_size = 0.5
         target.empty_display_type = 'PLAIN_AXES'
-        target.location = (0,0,-2)
+        if mvr_position:
+            root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
+            target.location = (root_position[0],root_position[1],root_position[2]-2)
+        else:
+            target.location = (0, 0, -2)
 
         # If there's no Head, this is a static fixture
         if ('Head' not in objs):

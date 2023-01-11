@@ -109,7 +109,7 @@ class DMX_Fixture(PropertyGroup):
         max = 1.0,
         default = (1.0,1.0,1.0,1.0))
 
-    def build(self, name, profile, mode, universe, address, gel_color):
+    def build(self, name, profile, mode, universe, address, gel_color, position = None):
 
         # (Edit) Store objects positions
         old_pos = {obj.name:obj.object.location.copy() for obj in self.objects}
@@ -147,7 +147,7 @@ class DMX_Fixture(PropertyGroup):
 
         # Import and deep copy Fixture Model Collection
         gdtf_profile = DMX_GDTF.loadProfile(profile)
-        model_collection = DMX_Model.getFixtureModelCollection(gdtf_profile, self.mode)
+        model_collection = DMX_Model.getFixtureModelCollection(gdtf_profile, self.mode, position)
         links = {}
         for obj in model_collection.objects:
             # Copy object
