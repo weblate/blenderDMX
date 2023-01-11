@@ -237,10 +237,12 @@ class DMX_GDTF():
             obj_child = objs[geometry.name]
             position = [geometry.position.matrix[c][3] for c in range(3)]
             if (geometry.name == root_geometry.name) and (mvr_position is not None):
-                root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
-                obj_child.location[0] += root_position[0]
-                obj_child.location[1] += root_position[1]
-                obj_child.location[2] += root_position[2]
+                #root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
+                #obj_child.location[0] += root_position[0]
+                #obj_child.location[1] += root_position[1]
+                #obj_child.location[2] += root_position[2]
+                obj_child.matrix_world=mvr_position.matrix
+
             obj_child.location[0] += position[0]
             obj_child.location[1] += position[1]
             obj_child.location[2] += position[2]
@@ -307,8 +309,11 @@ class DMX_GDTF():
         target.empty_display_size = 0.5
         target.empty_display_type = 'PLAIN_AXES'
         if mvr_position:
-            root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
-            target.location = (root_position[0],root_position[1],root_position[2]-2)
+            #root_position = [mvr_position.matrix[3][c]*0.001 for c in range(3)]
+            #target.location = (root_position[0],root_position[1],root_position[2]-2)
+            mvr_position.matrix[3][2] += -2
+            target.matrix_world=mvr_position.matrix
+
         else:
             target.location = (0, 0, -2)
 
